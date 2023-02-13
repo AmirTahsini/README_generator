@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 
 const {writeFile} = require('fs').promises;
+const generateREADME = require('./utils/generateMarkdown');
 
 const questions = () => {
     return inquirer.prompt([
@@ -25,9 +26,14 @@ const questions = () => {
         message: 'Provide instructions and examples for use',
       },
       {
-        type: 'input',
+        type: 'list',
         name: 'license',
-        message: 'Provide license info',
+        message: 'Select which license you would like to apply',
+        choices: [
+          'MIT',
+          'Apache',
+          'Mozilla'
+        ]
       },
       {
         type: 'input',
@@ -52,40 +58,7 @@ const questions = () => {
     ]);
   };
 
-  const generateREADME = ({title, description, installation, usage, license, credits, tests, github, email}) =>
-    `# ${title}
-
-     ## Table of Contents
-
-     ## Description
-     
-     ${description}
-     
-     ## Installation
-     
-     ${installation}
-     
-     ## Usage
-     
-     ${usage}
-     
-     ## License
-     
-     ${license}
-    
-     ## Credits
-     
-     ${credits}
-
-     ## Tests
-
-     ${tests}
-
-     ## Questions
-
-     Link to GitHub repo: (https://github.com/${github})
-
-     If you have any questions please send an email to: (mailto: ${email})`
+  
 
 
 // TODO: Create a function to write README file
@@ -93,7 +66,7 @@ const questions = () => {
 
 // TODO: Create a function to initialize app
 const init = () => {
-    promptUser()
+    questions()
       // Use writeFile method imported from fs.promises to use promises instead of
       // a callback function
       .then((answers) => writeFile('README.md', generateREADME(answers)))
